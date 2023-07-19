@@ -2,6 +2,7 @@ import { createNavigationContainerRef } from '@react-navigation/native'
 type RootStackParamList = {
   SIntro: undefined
   SLogin: undefined
+  SHome: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

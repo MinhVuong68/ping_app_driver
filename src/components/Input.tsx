@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   View,
   TextInputProps,
@@ -13,20 +12,32 @@ import { Icon } from '@/components'
 
 type InputProps = TextInputProps & {
   value?: string
-  onChangeText?: (t:string) => any
+  onChangeValue?: (t: string) => any
   input?: TextInputProps
 }
 
-const Input = ({ value='', input,onChangeText }: InputProps) => {
+const Input = ({ value = '', input, onChangeValue = () => {} }: InputProps) => {
+  const [textInputValue, setTextInputValue] = useState(value)
 
-  const [textInputValue,setTextInputValue] = useState(value)
+  const handleChangeText = (text: string) => {
+    setTextInputValue(text)
+    onChangeValue(text)
+  }
 
   const handleCleanInput = () => {
     setTextInputValue('')
   }
   return (
     <View style={styles.container}>
-      <TextInput style={styles.textInput} onChangeText={onChangeText} value={textInputValue} {...input} />
+      <TextInput
+        style={styles.textInput}
+        {...input}
+        onChangeText={handleChangeText}
+        value={textInputValue}
+        underlineColorAndroid="transparent"
+        autoCorrect={false}
+        autoCapitalize={'none'}
+      />
       <Pressable onPress={handleCleanInput}>
         <Icon type="AntDesign" name="closecircle" size={20} color="#ccc" />
       </Pressable>

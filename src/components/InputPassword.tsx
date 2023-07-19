@@ -1,17 +1,50 @@
 import React, { useState } from 'react'
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TextInputProps,
+} from 'react-native'
 
 import { Colors } from '@/theme'
 import { Icon } from '@/components'
 
-const InputPassword = () => {
+type InputProps = TextInputProps & {
+  value?: string
+  onChangeValue?: (t: string) => any
+  input?: TextInputProps
+}
+
+const InputPassword = ({
+  value = '',
+  input,
+  onChangeValue = () => {},
+}: InputProps) => {
   const [showPassword, setShowPassword] = useState(true)
+  const [textInputValue, setTextInputValue] = useState(value)
+
   const handleShowPassword = () => {
     setShowPassword(prev => !prev)
   }
+
+  const handleChangeText = (text: string) => {
+    setTextInputValue(text)
+    onChangeValue(text)
+  }
+
   return (
     <View style={[styles.container]}>
-      <TextInput secureTextEntry={showPassword}/>
+      <TextInput
+        {...input}
+        secureTextEntry={showPassword}
+        onChangeText={handleChangeText}
+        value={textInputValue}
+        underlineColorAndroid="transparent"
+        autoCorrect={false}
+        autoCapitalize={'none'}
+      />
       <Pressable onPress={handleShowPassword}>
         {showPassword ? (
           <Icon type="Entypo" name="eye" size={22} color="#ccc" />

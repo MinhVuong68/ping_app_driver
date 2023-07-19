@@ -12,13 +12,16 @@
 import 'react-native-gesture-handler'
 import ApplicationNavigator from '@/navigators/Application'
 import React from 'react'
+import { Provider } from 'react-redux'
+
+import store from '@/redux/store'
 
 function App(): JSX.Element {
   return (
-       <ApplicationNavigator/>
+    <Provider store={store}>
+      <ApplicationNavigator />
+    </Provider>
   )
 }
-
-
 
 export default App
