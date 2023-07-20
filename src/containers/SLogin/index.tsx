@@ -20,7 +20,7 @@ const SLogin = () => {
     try {
       setLoading(true)
       await dispatch(login(dataFormLogin)).unwrap()
-      navigate('SHome')
+      navigate('SMain')
     } catch (error) {
       Alert.alert('Thông báo', 'Tên đăng nhập hoặc mật khẩu không chính xác!')
       setLoading(false)

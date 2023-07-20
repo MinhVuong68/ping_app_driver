@@ -3,6 +3,10 @@ type RootStackParamList = {
   SIntro: undefined
   SLogin: undefined
   SHome: undefined
+  SMain: undefined
+  SOrderDelivering: undefined
+  SStatistical: undefined
+  SDeliveryHistory: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

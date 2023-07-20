@@ -6,6 +6,7 @@ export default {
     notOrder: require('@/assets/images/not-order-available.png'),
     starCorner: require('@/assets/images/star_corner.png'),
     starFilled: require('@/assets/images/star_filled.png'),
-    updating: require('@/assets/images/updating.png')
+    updating: require('@/assets/images/updating.png'),
+    coin: require('@/assets/images/dollar-coin.png')
   }
   

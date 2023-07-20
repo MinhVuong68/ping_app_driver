@@ -5,6 +5,7 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { SHome, SIntro, SLogin } from '@/containers'
 import { navigationRef } from './utils'
 import { Colors } from '@/theme'
+import MainNavigator from './Main'
 
 const Stack = createStackNavigator()
 
@@ -22,7 +23,7 @@ const ApplicationNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SIntro" component={SIntro} />
         <Stack.Screen name="SLogin" component={SLogin} />
-        <Stack.Screen name="SHome" component={SHome} />
+        <Stack.Screen name="SMain" component={MainNavigator}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

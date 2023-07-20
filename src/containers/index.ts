@@ -1,3 +1,6 @@
 export { default as SIntro } from './SIntro'
 export { default as SLogin } from './SLogin'
 export { default as SHome } from './SHome'
+export { default as SOrderDelivering } from './SOrderDelivering'
+export { default as SStatistical } from './SStatistical'
+export { default as SDeliveryHistory } from './SDeliveryHistory'
