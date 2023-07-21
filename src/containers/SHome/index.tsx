@@ -1,9 +1,18 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Text, View, Dimensions } from 'react-native'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { useSelector } from 'react-redux'
+
+import { RootState } from '@/redux/store'
+import { Images } from '@/theme'
 
 const Home = () => {
   const { width, height } = Dimensions.get('window')
+  const mapRef = useRef<MapView>(null)
+
+  const currentUser = useSelector((state: RootState) => state.user.currentUser)
+  console.log(currentUser);
+  
 
   const ASPECT_RATIO = width / height
 
@@ -18,7 +27,23 @@ const Home = () => {
     longitudeDelta: LONGITUDE_DELTA,
   }
 
-  const mapRef = useRef<MapView>(null)
+  const moveTo = async (position: { latitude: number; longitude: number }) => {
+    const camera = await mapRef.current?.getCamera()
+    if (camera) {
+      camera.center = position
+      mapRef.current?.animateCamera(camera, { duration: 1000 })
+    }
+  }
+
+  useEffect(() => {
+    if (currentUser.latitude && currentUser.longitude) {
+      moveTo({
+        latitude: currentUser.latitude,
+        longitude: currentUser.longitude,
+      })
+    }
+  }, [currentUser.latitude, currentUser.longitude, currentUser.currentLocation])
+
   return (
     <MapView
       ref={mapRef}
@@ -28,9 +53,29 @@ const Home = () => {
       }}
       provider={PROVIDER_GOOGLE}
       initialRegion={INITIAL_POSITION}
-      zoomEnabled={true}
-      //onRegionChangeComplete={handleGetPossion}
-    ></MapView>
+      zoomEnabled={true}>
+      {currentUser.latitude && currentUser.longitude && (
+        <>
+          <Circle
+            center={{
+              latitude: currentUser.latitude,
+              longitude: currentUser.longitude,
+            }}
+            radius={300}
+            fillColor="rgba(253,232,186,0.6)"
+            strokeWidth={0}
+          />
+          <Marker
+            coordinate={{
+              latitude: currentUser.latitude,
+              longitude: currentUser.longitude,
+            }}
+            image={Images.deliveryTruck}
+            draggable
+          />
+        </>
+      )}
+    </MapView>
   )
 }
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { CurrentUserType, UserLoginPayload } from './type'
+import { CurrentUserType, UserLocationPayLoad, UserLoginPayload } from './type'
 import Api from '@/services/Api'
 
 interface InitialState {
@@ -25,11 +25,15 @@ const api = Api.create()
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+  },
   extraReducers: builder => {
     builder.addCase(login.fulfilled, (state, action) => {
       const { token, ...payloadWithoutToken }: any = action.payload
       state.currentUser = payloadWithoutToken
+    })
+    .addCase(updateStatusAndLocation.fulfilled, (state,action) => {
+      state.currentUser = { ...state.currentUser, ...action.payload}
     })
   },
 })
@@ -44,6 +48,18 @@ export const login = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.response.data)
     }
   },
+)
+
+export const updateStatusAndLocation = createAsyncThunk(
+  'user/updateStatusOnlineAndLocation',
+  async (userLocation: UserLocationPayLoad,thunkAPI) => {
+    try {
+      const res = await api.updateStatusOnlineAndLocation(userLocation)
+      return res
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data)
+    }
+  }
 )
 
 export default userSlice.reducer

@@ -7,6 +7,7 @@ export default {
     starCorner: require('@/assets/images/star_corner.png'),
     starFilled: require('@/assets/images/star_filled.png'),
     updating: require('@/assets/images/updating.png'),
-    coin: require('@/assets/images/dollar-coin.png')
+    coin: require('@/assets/images/dollar-coin.png'),
+    deliveryTruck: require('@/assets/images/delivery-truck.png')
   }
   

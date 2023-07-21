@@ -1,25 +1,82 @@
-import React from 'react'
-import { Text, View, StyleSheet, Switch, Pressable } from 'react-native'
+import React, { useState } from 'react'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Switch,
+  Pressable,
+  Linking,
+} from 'react-native'
+import Geolocation from 'react-native-geolocation-service'
 
 import { Icon } from '@/components'
 import { Colors, Fonts } from '@/theme'
+import { getAddressFromLocation, locationPermisson } from '@/utils/map'
+import { RootState, useAppDispatch } from '@/redux/store'
+import { updateStatusAndLocation } from '@/redux/user/userSlice'
+import { useSelector } from 'react-redux'
 
 const MainHeader = ({ toggleDrawer }: any) => {
+  const currentUser = useSelector((state: RootState) => state.user.currentUser)
+
+  const dispatch = useAppDispatch()
+  const [isEnabled, setIsEnabled] = useState(false)
+
+  const toggleSwitch = async () => {
+    if (isEnabled) {
+      setIsEnabled(false)
+      dispatch(
+        updateStatusAndLocation({
+          id: currentUser.id,
+          driverStatus: 'OFFLINE',
+          currentLocation: null,
+          latitude: null,
+          longitude: null,
+        }),
+      )
+      Linking.openSettings()
+      return
+    }
+    try {
+      await locationPermisson()
+      Geolocation.getCurrentPosition(
+        async (position: any) => {
+          const coordinate = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }
+          const address = await getAddressFromLocation(coordinate)
+          dispatch(
+            updateStatusAndLocation({
+              id: currentUser.id,
+              driverStatus: 'ONLINE',
+              currentLocation: address,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            }),
+          )
+          setIsEnabled(previousState => !previousState)
+        },
+        (error: any) => console.log('Error getting location:', error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+      )
+    } catch (error) {}
+  }
+
   return (
     <View style={styles.container}>
       <Pressable onPress={toggleDrawer}>
         <Icon type="Entypo" name="menu" size={30} color={Colors.black} />
       </Pressable>
-      <Text style={Fonts.textLargeBold}>Online</Text>
+      <Text style={Fonts.textLargeBold}>
+        {isEnabled ? 'Online' : 'Offline'}
+      </Text>
       <Switch
         trackColor={{ false: '#767577', true: Colors.primary }}
-        // thumbColor={
-        //   isEnabled ? generalColor.border : generalColor.border
-        // }
+        thumbColor={isEnabled ? Colors.primary : Colors.borderBottom}
         ios_backgroundColor="#3e3e3e"
-        //onValueChange={toggleSwitch}
-        //value={isEnabled}
-        //style={styles.switch}
+        onValueChange={toggleSwitch}
+        value={isEnabled}
       />
     </View>
   )

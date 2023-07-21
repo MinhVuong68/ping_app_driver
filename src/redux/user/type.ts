@@ -14,3 +14,11 @@ export interface UserLoginPayload {
   phoneNumber: string
   password: string
 }
+
+export interface UserLocationPayLoad {
+  id: number | null,
+  driverStatus: 'ONLINE' | 'OFFLINE'
+  currentLocation: string | null,
+  latitude: number | null
+  longitude: number | null
+}
