@@ -11,8 +11,7 @@ const Home = () => {
   const mapRef = useRef<MapView>(null)
 
   const currentUser = useSelector((state: RootState) => state.user.currentUser)
-  console.log(currentUser);
-  
+  console.log(currentUser)
 
   const ASPECT_RATIO = width / height
 
@@ -48,6 +47,7 @@ const Home = () => {
     <MapView
       ref={mapRef}
       style={{
+        flex: 1,
         width: '100%',
         height: Dimensions.get('window').height,
       }}

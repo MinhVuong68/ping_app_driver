@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   View,
@@ -8,23 +8,28 @@ import {
   Linking,
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import { useSelector } from 'react-redux'
 
 import { Icon } from '@/components'
 import { Colors, Fonts } from '@/theme'
 import { getAddressFromLocation, locationPermisson } from '@/utils/map'
 import { RootState, useAppDispatch } from '@/redux/store'
 import { updateStatusAndLocation } from '@/redux/user/userSlice'
-import { useSelector } from 'react-redux'
 
 const MainHeader = ({ toggleDrawer }: any) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser)
 
   const dispatch = useAppDispatch()
-  const [isEnabled, setIsEnabled] = useState(false)
+  const [isEnabled, setIsEnabled] = useState(
+    currentUser.driverStatus === 'OFFLINE' ? false : true,
+  )
+
+  useEffect(() => {
+    setIsEnabled(currentUser.driverStatus === 'OFFLINE' ? false : true)
+  }, [currentUser.driverStatus])
 
   const toggleSwitch = async () => {
     if (isEnabled) {
-      setIsEnabled(false)
       dispatch(
         updateStatusAndLocation({
           id: currentUser.id,
@@ -33,7 +38,8 @@ const MainHeader = ({ toggleDrawer }: any) => {
           latitude: null,
           longitude: null,
         }),
-      )
+      ).unwrap()
+      setIsEnabled(previousState => !previousState)
       Linking.openSettings()
       return
     }
@@ -54,7 +60,7 @@ const MainHeader = ({ toggleDrawer }: any) => {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             }),
-          )
+          ).unwrap()
           setIsEnabled(previousState => !previousState)
         },
         (error: any) => console.log('Error getting location:', error),

@@ -6,6 +6,7 @@ import { SHome, SIntro, SLogin } from '@/containers'
 import { navigationRef } from './utils'
 import { Colors } from '@/theme'
 import MainNavigator from './Main'
+import SRoad from '@/containers/SOrderDelivering/SRoad'
 
 const Stack = createStackNavigator()
 
@@ -24,6 +25,7 @@ const ApplicationNavigator = () => {
         <Stack.Screen name="SIntro" component={SIntro} />
         <Stack.Screen name="SLogin" component={SLogin} />
         <Stack.Screen name="SMain" component={MainNavigator}/>
+        <Stack.Screen name="SRoad" component={SRoad}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

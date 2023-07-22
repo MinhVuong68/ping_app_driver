@@ -9,21 +9,37 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { Fonts, Images, Layout } from '@/theme'
 import { Icon, ImageAvatar } from '@/components'
-import { RootState } from '@/redux/store'
+import { RootState, useAppDispatch } from '@/redux/store'
+import { logout } from '@/redux/user/userSlice'
+import { navigate } from '@/navigators/utils'
 
 const CustomDrawer = (props: any) => {
+  const dispatch = useAppDispatch()
   const currentUser = useSelector((state: RootState) => state.user.currentUser)
+  
+  const onLogout = () => {
+    dispatch(
+      logout({
+        id: currentUser.id,
+        driverStatus: 'OFFLINE',
+        currentLocation: null,
+        latitude: null,
+        longitude: null,
+      }),
+    ).unwrap()
+    navigate('SLogin')
+  }
   return (
     <View style={Layout.full}>
       <View style={styles.viewProfile}>
-        <ImageAvatar uri={currentUser.avatar} />
+        {!!currentUser.avatar && <ImageAvatar uri={currentUser.avatar} />}
         <Text style={Fonts.textRegularBold}>{currentUser.fullName}</Text>
         <View style={Layout.rowVCenter}>
           <Text>250 coins </Text>
           <Image source={Images.coin} style={{ width: 15, height: 15 }} />
         </View>
         <View style={Layout.rowVCenter}>
-          <Text>Đánh giá: 4.5 </Text>
+          <Text>Đánh giá: {currentUser.reviewRate} </Text>
           <Image source={Images.starFilled} style={{ width: 15, height: 15 }} />
         </View>
       </View>
@@ -31,7 +47,7 @@ const CustomDrawer = (props: any) => {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.viewOptionsBottom}>
-        <TouchableOpacity style={[Layout.rowVCenter]}>
+        <TouchableOpacity style={[Layout.rowVCenter]} onPress={onLogout}>
           <Icon type="MaterialCommunityIcons" name="logout" size={20} />
           <Text style={Fonts.textRegularBold}>Đăng xuất</Text>
         </TouchableOpacity>

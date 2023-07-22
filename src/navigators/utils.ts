@@ -7,6 +7,7 @@ type RootStackParamList = {
   SOrderDelivering: undefined
   SStatistical: undefined
   SDeliveryHistory: undefined
+  SRoad: undefined
 }
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()

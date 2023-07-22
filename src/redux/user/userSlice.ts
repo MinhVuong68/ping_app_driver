@@ -17,6 +17,7 @@ const initialState: InitialState = {
     latitude: null,
     longitude: null,
     licensePlate: '',
+    driverStatus: '',
   },
 }
 
@@ -25,16 +26,19 @@ const api = Api.create()
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: builder => {
-    builder.addCase(login.fulfilled, (state, action) => {
-      const { token, ...payloadWithoutToken }: any = action.payload
-      state.currentUser = payloadWithoutToken
-    })
-    .addCase(updateStatusAndLocation.fulfilled, (state,action) => {
-      state.currentUser = { ...state.currentUser, ...action.payload}
-    })
+    builder
+      .addCase(login.fulfilled, (state, action) => {
+        const { token, ...payloadWithoutToken }: any = action.payload
+        state.currentUser = payloadWithoutToken
+      })
+      .addCase(updateStatusAndLocation.fulfilled, (state, action) => {
+        state.currentUser = { ...state.currentUser, ...action.payload }
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.currentUser = { ...initialState.currentUser, ...action.payload }
+      })
   },
 })
 
@@ -50,16 +54,28 @@ export const login = createAsyncThunk(
   },
 )
 
-export const updateStatusAndLocation = createAsyncThunk(
-  'user/updateStatusOnlineAndLocation',
-  async (userLocation: UserLocationPayLoad,thunkAPI) => {
+export const logout = createAsyncThunk(
+  'user/logout',
+  async (userLocation: UserLocationPayLoad, thunkAPI) => {
     try {
       const res = await api.updateStatusOnlineAndLocation(userLocation)
       return res
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data)
     }
-  }
+  },
+)
+
+export const updateStatusAndLocation = createAsyncThunk(
+  'user/updateStatusOnlineAndLocation',
+  async (userLocation: UserLocationPayLoad, thunkAPI) => {
+    try {
+      const res = await api.updateStatusOnlineAndLocation(userLocation)
+      return res
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data)
+    }
+  },
 )
 
 export default userSlice.reducer

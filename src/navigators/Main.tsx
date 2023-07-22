@@ -45,10 +45,11 @@ const MainNavigator = () => {
     <Drawer.Navigator
       initialRouteName="SHome"
       screenOptions={({ navigation }) => ({
-        header: props => <MainHeader toggleDrawer={navigation.toggleDrawer} />,
+        header: props => (
+          <MainHeader toggleDrawer={navigation.toggleDrawer} {...props} />
+        ),
       })}
-      drawerContent={props => <CustomDrawer {...props}/>}
-      >
+      drawerContent={props => <CustomDrawer {...props} />}>
       {itemMainDrawer.map((item, index) => {
         return (
           <Drawer.Screen

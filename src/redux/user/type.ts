@@ -8,6 +8,7 @@ export type CurrentUserType = {
   latitude: number | null
   longitude: number | null
   licensePlate: string
+  driverStatus: string
 }
 
 export interface UserLoginPayload {
