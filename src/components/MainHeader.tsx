@@ -6,6 +6,7 @@ import {
   Switch,
   Pressable,
   Linking,
+  Alert,
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
 import { useSelector } from 'react-redux'
@@ -29,44 +30,51 @@ const MainHeader = ({ toggleDrawer }: any) => {
   }, [currentUser.driverStatus])
 
   const toggleSwitch = async () => {
-    if (isEnabled) {
-      dispatch(
-        updateStatusAndLocation({
-          id: currentUser.id,
-          driverStatus: 'OFFLINE',
-          currentLocation: null,
-          latitude: null,
-          longitude: null,
-        }),
-      ).unwrap()
-      setIsEnabled(previousState => !previousState)
-      Linking.openSettings()
-      return
-    }
-    try {
-      await locationPermisson()
-      Geolocation.getCurrentPosition(
-        async (position: any) => {
-          const coordinate = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }
-          const address = await getAddressFromLocation(coordinate)
-          dispatch(
-            updateStatusAndLocation({
-              id: currentUser.id,
-              driverStatus: 'ONLINE',
-              currentLocation: address,
+    if (isEnabled === true) {
+      try {
+        dispatch(
+          updateStatusAndLocation({
+            id: currentUser.id,
+            driverStatus: 'OFFLINE',
+            currentLocation: null,
+            latitude: null,
+            longitude: null,
+          }),
+        ).unwrap()
+        setIsEnabled(previousState => !previousState)
+        Linking.openSettings()
+        return
+      } catch (error: any) {
+        Alert.alert(
+          'Không được cập nhật trạng thái khi đang có đơn hàng đang chờ xử lí!!',
+        )
+      }
+    } else {
+      try {
+        await locationPermisson()
+        Geolocation.getCurrentPosition(
+          async (position: any) => {
+            const coordinate = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-            }),
-          ).unwrap()
-          setIsEnabled(previousState => !previousState)
-        },
-        (error: any) => console.log('Error getting location:', error),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-      )
-    } catch (error) {}
+            }
+            const address = await getAddressFromLocation(coordinate)
+            dispatch(
+              updateStatusAndLocation({
+                id: currentUser.id,
+                driverStatus: 'ONLINE',
+                currentLocation: address,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              }),
+            ).unwrap()
+            setIsEnabled(previousState => !previousState)
+          },
+          (error: any) => console.log('Error getting location:', error),
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        )
+      } catch (error) {}
+    }
   }
 
   return (

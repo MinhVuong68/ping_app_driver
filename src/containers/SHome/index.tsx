@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Text, View, Dimensions } from 'react-native'
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import React, { useEffect, useRef } from 'react'
+import { Dimensions } from 'react-native'
+import MapView, {
+  Circle,
+  LatLng,
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps'
 import { useSelector } from 'react-redux'
 
 import { RootState } from '@/redux/store'
@@ -26,7 +31,7 @@ const Home = () => {
     longitudeDelta: LONGITUDE_DELTA,
   }
 
-  const moveTo = async (position: { latitude: number; longitude: number }) => {
+  const moveTo = async (position: LatLng) => {
     const camera = await mapRef.current?.getCamera()
     if (camera) {
       camera.center = position

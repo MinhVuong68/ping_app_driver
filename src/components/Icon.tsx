@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // import EvilIcons from 'react-native-vector-icons/EvilIcons';
 // import Feather from 'react-native-vector-icons/Feather';
-// import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 // import Fontisto from 'react-native-vector-icons/Fontisto';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -36,6 +36,8 @@ const Icon = ({
       return <FontAwesome name={name} size={size} color={color} />;
     case 'MaterialCommunityIcons':
       return <MaterialCommunityIcons name={name} size={size} color={color} />;
+      case 'FontAwesome5':
+        return <FontAwesome5 name={name} size={size} color={color} />;
     default:
       return <></>;
   }
