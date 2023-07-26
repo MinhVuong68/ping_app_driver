@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 
 import {
   SDeliveryHistory,
+  SHaveBooking,
   SHome,
   SOrderDelivering,
   SStatistical,
@@ -19,6 +20,12 @@ const itemMainDrawer = [
     compoponent: SHome,
     drawerLabel: 'Trang chủ',
     iconName: 'home',
+  },
+  {
+    name: 'SHaveBooking',
+    compoponent: SHaveBooking,
+    drawerLabel: 'Đơn chờ xử lí',
+    iconName: 'spinner',
   },
   {
     name: 'SOrderDelivering',

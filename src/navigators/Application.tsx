@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 
-import { SHome, SIntro, SLogin } from '@/containers'
+import { SHaveBooking, SHome, SIntro, SLogin } from '@/containers'
 import { navigationRef } from './utils'
 import { Colors } from '@/theme'
 import MainNavigator from './Main'

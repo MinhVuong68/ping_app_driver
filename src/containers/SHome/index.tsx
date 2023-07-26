@@ -7,9 +7,11 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps'
 import { useSelector } from 'react-redux'
+import firestore from '@react-native-firebase/firestore'
 
 import { RootState } from '@/redux/store'
 import { Images } from '@/theme'
+import { navigate } from '@/navigators/utils'
 
 const Home = () => {
   const { width, height } = Dimensions.get('window')
@@ -47,6 +49,26 @@ const Home = () => {
       })
     }
   }, [currentUser.latitude, currentUser.longitude, currentUser.currentLocation])
+
+  useEffect(() => {
+    const subscriber = firestore()
+    .collection('orders')
+    .where('driverId','==',currentUser.id)
+    .onSnapshot(querySnapshot => {
+      querySnapshot.docChanges().forEach((change) => {
+        const orderData = change.doc.data();
+        // Kiểm tra xem trường "orderStatus" có thay đổi không
+        // Kiểm tra xem có thay đổi và có thông tin driverId
+        if (change.type === 'added' && orderData.driverId) {
+          // Hiển thị cửa sổ thông báo (alert)
+          navigate('SHaveBooking')
+          console.log(123);
+        }
+      });
+    });
+  // Stop listening for updates when no longer required
+  return () => subscriber();
+  },[])
 
   return (
     <MapView
