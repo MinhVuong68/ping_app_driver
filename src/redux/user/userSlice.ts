@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { CurrentUserType, UserLocationPayLoad, UserLoginPayload } from './type'
+import { CurrentUserType, OrderStatusUpdatePayLoad, UserLocationPayLoad, UserLoginPayload } from './type'
 import Api from '@/services/Api'
 
 interface InitialState {
-  currentUser: CurrentUserType
+  currentUser: CurrentUserType,
+  isOrderPending: boolean
 }
 
 const initialState: InitialState = {
@@ -19,6 +20,7 @@ const initialState: InitialState = {
     licensePlate: '',
     driverStatus: '',
   },
+  isOrderPending: false,
 }
 
 const api = Api.create()
@@ -26,7 +28,11 @@ const api = Api.create()
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setOrderPending(state,action) {
+      state.isOrderPending = action.payload
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(login.fulfilled, (state, action) => {
@@ -77,5 +83,19 @@ export const updateStatusAndLocation = createAsyncThunk(
     }
   },
 )
+
+export const updateOrderStatus = createAsyncThunk(
+  'user/updateOrderStatus',
+  async (orderStatusUpdate: OrderStatusUpdatePayLoad,thunkAPI) => {
+    try {
+      const res = await api.updateOrderStatus(orderStatusUpdate)
+      return res
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const { setOrderPending } = userSlice.actions
 
 export default userSlice.reducer

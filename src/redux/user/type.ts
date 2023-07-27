@@ -23,3 +23,9 @@ export interface UserLocationPayLoad {
   latitude: number | null
   longitude: number | null
 }
+
+
+export interface OrderStatusUpdatePayLoad {
+  driverId: number | null
+  orderStatus: string
+}

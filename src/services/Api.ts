@@ -1,6 +1,10 @@
 import axios from 'axios'
 import apiConfig from '@/configs/apiConfig'
-import { UserLocationPayLoad, UserLoginPayload } from '@/redux/user/type'
+import {
+  OrderStatusUpdatePayLoad,
+  UserLocationPayLoad,
+  UserLoginPayload,
+} from '@/redux/user/type'
 
 const create = () => {
   const api = axios.create({
@@ -26,11 +30,15 @@ const create = () => {
     api.post('/driver/login', payload)
   const updateStatusOnlineAndLocation = (payload: UserLocationPayLoad) =>
     api.post('/driver/status_location', payload)
+  const updateOrderStatus = (payload: OrderStatusUpdatePayLoad) =>
+    api.put('/driver/updateOrderStatus', payload)
 
   return {
     login,
-    updateStatusOnlineAndLocation
+    updateStatusOnlineAndLocation,
+    updateOrderStatus,
   }
 }
 
 export default { create }
+4

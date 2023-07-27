@@ -2,19 +2,26 @@ import React from 'react'
 import { View, Image, StyleSheet, Text } from 'react-native'
 
 import { Fonts, Layout } from '@/theme'
+import { formatCurrency } from '@/utils'
 
-const CardInfoCustomer = () => {
+interface CardInfoCustomerProps {
+  uri: string
+  name: string
+  price: number
+}
+
+const CardInfoCustomer = ({ uri, name, price }: CardInfoCustomerProps) => {
   return (
     <View style={[styles.container]}>
       <Image
         source={{
-          uri: 'https://firebasestorage.googleapis.com/v0/b/ping-5ccd1.appspot.com/o/images%2Fmira.jfif?alt=media&token=9f645da4-eb52-4010-914c-d00a44697028',
+          uri: uri,
         }}
         style={styles.avatar}
       />
       <View style={{ marginLeft: 10 }}>
-        <Text style={Fonts.textRegularBold}>Nguyễn Minh Vương</Text>
-        <Text>150000 vnđ</Text>
+        <Text style={Fonts.textRegularBold}>{name}</Text>
+        <Text>{formatCurrency(price)}</Text>
       </View>
     </View>
   )
@@ -23,13 +30,13 @@ const CardInfoCustomer = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginBottom: 15
+    marginBottom: 15,
   },
   avatar: {
     width: 70,
     height: 70,
     borderRadius: 6,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 })
 

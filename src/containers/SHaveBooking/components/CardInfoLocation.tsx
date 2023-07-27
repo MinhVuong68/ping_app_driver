@@ -4,7 +4,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from '@/components'
 import { Colors, Fonts, Layout } from '@/theme'
 
-const CardInfoLocation = () => {
+interface CardInfoLocationProps {
+  fromAddress: string
+  toAddress: string
+}
+
+const CardInfoLocation = ({
+  fromAddress,
+  toAddress,
+}: CardInfoLocationProps) => {
   return (
     <View>
       <View style={styles.viewLocation}>
@@ -17,9 +25,7 @@ const CardInfoLocation = () => {
           />
           <View style={[Layout.col, { marginLeft: 10 }]}>
             <Text>Nhận hàng:</Text>
-            <Text style={[Fonts.textRegular]}>
-              156 Tân Kì, Tân Phú, TP. HCM
-            </Text>
+            <Text style={[Fonts.textRegular]}>{fromAddress}</Text>
           </View>
         </View>
         <Icon type="Entypo" name="dots-three-vertical" size={22} />
@@ -34,7 +40,7 @@ const CardInfoLocation = () => {
           <View style={[Layout.col, { marginLeft: 10 }]}>
             <Text>Giao hàng:</Text>
             <Text style={[Fonts.textRegular, Layout.rowVCenter]}>
-              321 Lý Thường Kiệt, Quận 11, TP. HCM
+              {toAddress}
             </Text>
           </View>
         </View>
