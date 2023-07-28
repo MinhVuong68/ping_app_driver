@@ -13,6 +13,7 @@ import { RootState, useAppDispatch } from '@/redux/store'
 import { Images } from '@/theme'
 import { navigate } from '@/navigators/utils'
 import { setOrderPending } from '@/redux/user/userSlice'
+import { BOOKING_ACCEPT_PENDING } from '@/configs/constants'
 
 const Home = () => {
   const dispatch = useAppDispatch()
@@ -60,7 +61,7 @@ const Home = () => {
           const orderData = change.doc.data()
           // Kiểm tra xem trường "orderStatus" có thay đổi không
           // Kiểm tra xem có thay đổi và có thông tin driverId
-          if (change.type === 'added' && orderData.driverId) {
+          if (change.type === 'added' && orderData.driverId && orderData.orderStatus === BOOKING_ACCEPT_PENDING) {
             dispatch(setOrderPending(true))
             // Hiển thị cửa sổ thông báo (alert)
             navigate('SHaveBooking', {
@@ -72,8 +73,8 @@ const Home = () => {
               fromAddress: orderData.fromAddress,
               toAddress: orderData.toAddress,
             })
-            console.log(123)
-          }
+            //console.log(123)
+          } return;
         })
       })
     // Stop listening for updates when no longer required

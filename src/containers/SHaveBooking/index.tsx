@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useSelector } from 'react-redux'
 
@@ -11,6 +11,7 @@ import { navigate } from '@/navigators/utils'
 import { BOOKING_STATE_COMING } from '@/configs/constants'
 import { setOrderPending, updateOrderStatus } from '@/redux/user/userSlice'
 import { updateOrderStatus_F } from '@/firebase/services'
+import ModalRejectOrder from './components/ModalRejectOrder'
 
 const SHaveBooking = ({ route }: any) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser)
@@ -20,6 +21,10 @@ const SHaveBooking = ({ route }: any) => {
 
   const dispatch = useAppDispatch()
 
+  const [modalVisible, setModalVisible] = useState(false)
+  const [reasonReject, setReasonReject] = useState('')
+
+  console.log(reasonReject)
 
   const handleReceiveOrder = async () => {
     try {
@@ -37,8 +42,13 @@ const SHaveBooking = ({ route }: any) => {
     }
   }
 
+  const handleRejectOrder = () => {
+    setModalVisible(true)
+  }
+
   return (
     <View style={[Layout.full, styles.container]}>
+      {/* SET LAI = isOrderPending */}
       {isOrderPending ? (
         <>
           <CardInfoCustomer
@@ -54,6 +64,7 @@ const SHaveBooking = ({ route }: any) => {
             <Button
               title="Từ chối"
               style={{ ...styles.btn, backgroundColor: 'red' }}
+              onPress={handleRejectOrder}
             />
             <Button
               title="Nhận đơn"
@@ -61,10 +72,18 @@ const SHaveBooking = ({ route }: any) => {
               onPress={handleReceiveOrder}
             />
           </View>
+          <ModalRejectOrder
+            isVisible={modalVisible}
+            setVisible={setModalVisible}
+            setValue={setReasonReject}
+          />
         </>
       ) : (
         <>
-          <EmptyView image={Images.notOrder} title="Không có đơn hàng ở trạng thái này"/>
+          <EmptyView
+            image={Images.notOrder}
+            title="Không có đơn hàng ở trạng thái này"
+          />
         </>
       )}
     </View>

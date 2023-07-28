@@ -5,6 +5,7 @@ import {
   UserLocationPayLoad,
   UserLoginPayload,
 } from '@/redux/user/type'
+import { serialize } from '@/utils/api'
 
 const create = () => {
   const api = axios.create({
@@ -32,13 +33,17 @@ const create = () => {
     api.post('/driver/status_location', payload)
   const updateOrderStatus = (payload: OrderStatusUpdatePayLoad) =>
     api.put('/driver/updateOrderStatus', payload)
-
+  const getOrdersByOrderStatusAndDriverId = (payload: {
+    orderStatus: string
+    driverId: number | null
+  }) =>
+    api.get(`/driver/getOrdersByOrderStatusAndDriverId${serialize(payload)}`)
   return {
     login,
     updateStatusOnlineAndLocation,
     updateOrderStatus,
+    getOrdersByOrderStatusAndDriverId
   }
 }
 
 export default { create }
-4
