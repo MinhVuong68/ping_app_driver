@@ -25,4 +25,26 @@ export const updateOrderStatus_F = async (
   }
 }
 
+export const deleteOrderByOrderId_F = async (orderId: number) => {
+  try {
+    // Truy vấn các document có orderId trùng khớp
+    const querySnapshot = await firestore()
+      .collection('orders')
+      .where('orderId', '==', orderId)
+      .get()
 
+    // Kiểm tra xem có document nào thoả mãn điều kiện tìm kiếm không
+    if (querySnapshot.empty) {
+      console.log('Không tìm thấy document với orderId này.')
+      return
+    }
+
+    // Lặp qua từng document và xóa chúng
+    querySnapshot.forEach(doc => {
+      firestore().collection('orders').doc(doc.id).delete()
+      console.log(`Đã xóa document có orderId: ${orderId}`)
+    })
+  } catch (error) {
+    console.error('Lỗi khi xóa document:', error)
+  }
+}

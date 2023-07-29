@@ -10,11 +10,13 @@ interface ModalRejectOrderProps {
   isVisible: boolean
   setVisible: (b: boolean) => any
   setValue: (v: string) => any
+  handleReject?: () => any
 }
 const ModalRejectOrder = ({
   isVisible,
   setVisible,
   setValue,
+  handleReject,
 }: ModalRejectOrderProps) => {
   const radioButtons: RadioButtonProps[] = useMemo(
     () => [
@@ -62,7 +64,11 @@ const ModalRejectOrder = ({
               selectedId={selectedId}
               containerStyle={{ alignItems: 'flex-start' }}
             />
-            <Button title="Xác nhận" style={{ width: '100%' }} />
+            <Button
+              title="Xác nhận"
+              style={{ width: '100%' }}
+              onPress={handleReject}
+            />
           </View>
         </View>
       </View>

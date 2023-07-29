@@ -26,6 +26,8 @@ export interface UserLocationPayLoad {
 
 
 export interface OrderStatusUpdatePayLoad {
-  driverId: number | null
-  orderStatus: string
+  driverId: number | null,
+  orderId: number | null,
+  orderStatus: string,
+  reasonDenied?: string,
 }

@@ -32,7 +32,7 @@ const create = () => {
   const updateStatusOnlineAndLocation = (payload: UserLocationPayLoad) =>
     api.post('/driver/status_location', payload)
   const updateOrderStatus = (payload: OrderStatusUpdatePayLoad) =>
-    api.put('/driver/updateOrderStatus', payload)
+    api.put(`/driver/updateOrderStatus${serialize(payload)}`)
   const getOrdersByOrderStatusAndDriverId = (payload: {
     orderStatus: string
     driverId: number | null

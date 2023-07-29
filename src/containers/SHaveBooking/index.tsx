@@ -8,9 +8,15 @@ import CardInfoLocation from './components/CardInfoLocation'
 import { Button, EmptyView } from '@/components'
 import { RootState, useAppDispatch } from '@/redux/store'
 import { navigate } from '@/navigators/utils'
-import { BOOKING_STATE_COMING } from '@/configs/constants'
+import {
+  BOOKING_STATE_COMING,
+  BOOKING_STATE_REJECTED,
+} from '@/configs/constants'
 import { setOrderPending, updateOrderStatus } from '@/redux/user/userSlice'
-import { updateOrderStatus_F } from '@/firebase/services'
+import {
+  deleteOrderByOrderId_F,
+  updateOrderStatus_F,
+} from '@/firebase/services'
 import ModalRejectOrder from './components/ModalRejectOrder'
 
 const SHaveBooking = ({ route }: any) => {
@@ -32,6 +38,7 @@ const SHaveBooking = ({ route }: any) => {
         updateOrderStatus({
           driverId: route.params.driverId,
           orderStatus: BOOKING_STATE_COMING,
+          orderId: route.params.orderId,
         }),
       ).unwrap()
       await updateOrderStatus_F(route.params.orderId, BOOKING_STATE_COMING)
@@ -42,8 +49,23 @@ const SHaveBooking = ({ route }: any) => {
     }
   }
 
-  const handleRejectOrder = () => {
-    setModalVisible(true)
+  
+  const handleRejectOrder = async () => {
+    try {
+      await dispatch(
+        updateOrderStatus({
+          driverId: route.params.driverId,
+          orderStatus: BOOKING_STATE_REJECTED,
+          orderId: route.params.orderId,
+          reasonDenied: reasonReject
+        }),
+      ).unwrap()
+      await updateOrderStatus_F(route.params.orderId, BOOKING_STATE_REJECTED)
+      await deleteOrderByOrderId_F(route.params.orderId)
+      navigate('SHome')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -64,7 +86,7 @@ const SHaveBooking = ({ route }: any) => {
             <Button
               title="Từ chối"
               style={{ ...styles.btn, backgroundColor: 'red' }}
-              onPress={handleRejectOrder}
+              onPress={() => setModalVisible(true)}
             />
             <Button
               title="Nhận đơn"
@@ -76,6 +98,7 @@ const SHaveBooking = ({ route }: any) => {
             isVisible={modalVisible}
             setVisible={setModalVisible}
             setValue={setReasonReject}
+            handleReject={handleRejectOrder}
           />
         </>
       ) : (
