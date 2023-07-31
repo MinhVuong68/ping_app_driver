@@ -58,7 +58,7 @@ const Home = () => {
       .where('driverId', '==', currentUser.id)
       .onSnapshot(querySnapshot => {
         querySnapshot.docChanges().forEach(change => {
-          const orderData = change.doc.data()
+          const orderData = change?.doc?.data()
           // Kiểm tra xem trường "orderStatus" có thay đổi không
           // Kiểm tra xem có thay đổi và có thông tin driverId
           if (change.type === 'added' && orderData.driverId && orderData.orderStatus === BOOKING_ACCEPT_PENDING) {

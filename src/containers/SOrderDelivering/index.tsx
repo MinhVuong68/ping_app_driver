@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 import { Colors, Fonts, Images, Layout } from '@/theme'
 import CardContact from './components/CardContact'
@@ -9,10 +10,20 @@ import ItemPayment from './components/ItemPayMent'
 import { navigate } from '@/navigators/utils'
 import { Linking } from 'react-native'
 import { RootState, useAppDispatch } from '@/redux/store'
-import { getOrdersByOrderStatusAndDriverId } from '@/redux/user/userSlice'
+import {
+  getOrdersByOrderStatusAndDriverId,
+  updateOrderStatus,
+} from '@/redux/user/userSlice'
 import { useSelector } from 'react-redux'
-import { BOOKING_STATE_COMING } from '@/configs/constants'
+import {
+  BOOKING_STATE_COMING,
+  BOOKING_STATE_COMPLETE,
+} from '@/configs/constants'
 import { formatDate, formatTime } from '@/utils'
+import {
+  deleteOrderByOrderId_F,
+  updateOrderStatus_F,
+} from '@/firebase/services'
 
 const SOrderDelivering = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser)
@@ -23,24 +34,26 @@ const SOrderDelivering = () => {
 
   const [order, setOrder] = useState<any>({})
 
-  useEffect(() => {
-    const getOrder = async () => {
-      try {
-        const res: any = await dispatch(
-          getOrdersByOrderStatusAndDriverId({
-            orderStatus: BOOKING_STATE_COMING,
-            driverId: currentUser.id,
-          }),
-        ).unwrap()
-        console.log(res)
+  useFocusEffect(
+    React.useCallback(() => {
+      const getOrder = async () => {
+        try {
+          const res: any = await dispatch(
+            getOrdersByOrderStatusAndDriverId({
+              orderStatus: BOOKING_STATE_COMING,
+              driverId: currentUser.id,
+            }),
+          ).unwrap()
+          console.log('m', res)
 
-        if (res.length) {
-          setOrder(res[0])
-        }
-      } catch (error) {}
-    }
-    getOrder()
-  }, [])
+          if (res.length) {
+            setOrder(res[0])
+          }
+        } catch (error) {}
+      }
+      getOrder()
+    }, []),
+  )
 
   const onGo = (latitude: number, longitude: number) => {
     Linking.openURL(
@@ -48,8 +61,24 @@ const SOrderDelivering = () => {
     )
   }
 
-  console.log(isOrderPending)
-  console.log(order.id)
+  console.log(order)
+
+  const onPressComplete = async () => {
+    try {
+      await dispatch(
+        updateOrderStatus({
+          driverId: currentUser.id,
+          orderStatus: BOOKING_STATE_COMPLETE,
+          orderId: order?.id,
+        }),
+      ).unwrap()
+      await updateOrderStatus_F(order?.id, BOOKING_STATE_COMPLETE)
+      await deleteOrderByOrderId_F(order?.id)
+      navigate('SHome')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <View style={Layout.full}>
@@ -66,6 +95,7 @@ const SOrderDelivering = () => {
             linkAvatar={order?.customer?.avatar}
             name={order?.customer?.name}
             phoneContact={order?.customer?.phoneContact}
+            orderId={order?.id}
           />
           <View style={styles.viewLocation}>
             <View style={Layout.rowVCenter}>
@@ -133,7 +163,19 @@ const SOrderDelivering = () => {
           <View style={Layout.colVCenter}>
             <Button
               title="Kết thúc chuyến"
-              onPress={() => {}}
+              onPress={() => {
+                Alert.alert(
+                  '',
+                  'Bạn đã hoàn thành vận chuyển cho đơn hàng này',
+                  [
+                    {
+                      text: 'Hủy',
+                      style: 'cancel',
+                    },
+                    { text: 'Đồng ý', onPress: onPressComplete },
+                  ],
+                )
+              }}
               style={{ marginTop: 15 }}
             />
           </View>

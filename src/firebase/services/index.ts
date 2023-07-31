@@ -38,7 +38,6 @@ export const deleteOrderByOrderId_F = async (orderId: number) => {
       console.log('Không tìm thấy document với orderId này.')
       return
     }
-
     // Lặp qua từng document và xóa chúng
     querySnapshot.forEach(doc => {
       firestore().collection('orders').doc(doc.id).delete()

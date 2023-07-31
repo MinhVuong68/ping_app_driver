@@ -18,12 +18,14 @@ type CardContactDeliverProps = {
   linkAvatar: string
   name: string
   phoneContact?: string
+  orderId: number
 }
 
 const CardContact = ({
   linkAvatar,
   name,
   phoneContact = '',
+  orderId,
 }: CardContactDeliverProps) => {
   return (
     <View style={styles.container}>
@@ -41,7 +43,14 @@ const CardContact = ({
         </View>
 
         <View style={[Layout.full, Layout.rowEnd]}>
-          <TouchableOpacity style={styles.wrapperIcon} onPress={() => {}}>
+          <TouchableOpacity
+            style={styles.wrapperIcon}
+            onPress={() =>
+              navigate('SChat', {
+                orderId: orderId,
+                customerName: name,
+              })
+            }>
             <Icon
               type="MaterialCommunityIcons"
               name="chat-processing-outline"
