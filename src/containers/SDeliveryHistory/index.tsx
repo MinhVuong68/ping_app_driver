@@ -1,12 +1,15 @@
-import { Layout } from '@/theme'
-import React from 'react'
-
-import { Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import ResultCard from './components/ResultCard'
 import styles from './styles/SDeliveryHistoryStyle'
 import OrderCard from './components/OrderCard'
+import ModalCalendarPicker from './components/ModalCalendarPicker'
+
+import { Colors, Layout } from '@/theme'
 
 const SDeliveryHistory = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <View style={[Layout.full, styles.container]}>
       <View style={styles.viewCardsResult}>
@@ -18,6 +21,19 @@ const SDeliveryHistory = () => {
           color="#00724D"
         />
       </View>
+      <View style={styles.viewDate}>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={styles.btnChangeDate}>
+          <Text style={{ color: '#fff' }}>Thay đổi</Text>
+        </TouchableOpacity>
+        <Text style={{ marginLeft: 10 }}>31-07-2023</Text>
+      </View>
+
+      <ModalCalendarPicker
+        isVisible={modalVisible}
+        setVisible={setModalVisible}
+      />
       <View style={styles.lCardOrder}>
         <OrderCard
           id={1}
