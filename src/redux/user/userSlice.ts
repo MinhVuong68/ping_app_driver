@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
   CurrentUserType,
   OrderStatusUpdatePayLoad,
+  OrdersFilterByDatePayLoad,
   UserLocationPayLoad,
   UserLoginPayload,
 } from './type'
@@ -109,6 +110,18 @@ export const getOrdersByOrderStatusAndDriverId = createAsyncThunk(
   ) => {
     try {
       const res = await api.getOrdersByOrderStatusAndDriverId(payload)
+      return res
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data)
+    }
+  },
+)
+
+export const getOrdersCompletedByDriverIdAndDate = createAsyncThunk(
+  'user/getOrdersCompletedByDriverIdAndDate',
+  async (payload: OrdersFilterByDatePayLoad, thunkAPI) => {
+    try {
+      const res = await api.getOrdersCompletedByDriverIdAndDate(payload)
       return res
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data)

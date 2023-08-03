@@ -2,16 +2,24 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Modal from 'react-native-modal'
 import CalendarPicker from 'react-native-calendar-picker'
+import moment from 'moment'
 
 interface ModalCalendarPickerProps {
   isVisible: boolean
   setVisible: (b: boolean) => any
+  setValue: (v:string) => any
 }
 
 const ModalCalendarPicker = ({
   isVisible,
   setVisible,
+  setValue,
 }: ModalCalendarPickerProps) => {
+
+  const handleDateChange = (date:any) => {
+    setVisible(false);
+    setValue(moment(date).format('DD-MM-YYYY'))
+  };
   return (
     <Modal
       isVisible={isVisible}
@@ -21,8 +29,7 @@ const ModalCalendarPicker = ({
         <CalendarPicker
           previousTitle="Trước"
           nextTitle="Sau"
-
-          //onDateChange={handleDateChange}
+          onDateChange={handleDateChange}
         />
       </View>
     </Modal>

@@ -12,12 +12,10 @@ export const formatCurrency = (number: number) => {
   return formatter.format(number)
 }
 
-
 export const formatDate = (date: string) => {
   const dateObject = new Date(date)
-
-  const day = dateObject.getDate() // Lấy ngày (1-31)
-
+  let day: string | number = dateObject.getDate() // Lấy ngày (1-31)
+  if (day < 10) day = '0' + day
   let month: string | number = dateObject.getMonth() + 1 // Lấy tháng (0-11, nên cộng thêm 1)
   if (month < 10) month = '0' + month
   const year = dateObject.getFullYear()
@@ -26,9 +24,11 @@ export const formatDate = (date: string) => {
 
 export const formatTime = (date: string) => {
   const dateObject = new Date(date)
-
-  const hours = dateObject.getHours() // Lấy giờ (0-23)
-  const minutes = dateObject.getMinutes() // Lấy phút (0-59)
-  const seconds = dateObject.getSeconds() // Lấy giây (0-59)
+  let hours: number | string = dateObject.getHours() // Lấy giờ (0-23)
+  if (hours < 10) hours = '0' + hours
+  let minutes: number | string = dateObject.getMinutes() // Lấy phút (0-59)
+  if (minutes < 10) minutes = '0' + minutes
+  let seconds: number | string = dateObject.getSeconds() // Lấy giây (0-59)
+  if (seconds < 10) seconds = '0' + seconds
   return `${hours}:${minutes}:${seconds}`
 }

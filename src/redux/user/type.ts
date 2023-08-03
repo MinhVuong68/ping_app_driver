@@ -31,3 +31,8 @@ export interface OrderStatusUpdatePayLoad {
   orderStatus: string,
   reasonDenied?: string,
 }
+
+export interface OrdersFilterByDatePayLoad {
+  driverId: number | null,
+  date: string
+}

@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   lCardOrder: {
-    marginTop: 10
+    marginTop: 10,
+    flex: 1,
   },
   viewDate: {
     flexDirection: 'row',

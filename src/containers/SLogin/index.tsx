@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, Alert } from 'react-native'
+import { View, Alert } from 'react-native'
 
 import { Layout } from '@/theme'
 import styles from './styles/SLoginStyle'

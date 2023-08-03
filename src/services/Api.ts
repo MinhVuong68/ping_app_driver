@@ -2,6 +2,7 @@ import axios from 'axios'
 import apiConfig from '@/configs/apiConfig'
 import {
   OrderStatusUpdatePayLoad,
+  OrdersFilterByDatePayLoad,
   UserLocationPayLoad,
   UserLoginPayload,
 } from '@/redux/user/type'
@@ -38,11 +39,14 @@ const create = () => {
     driverId: number | null
   }) =>
     api.get(`/driver/getOrdersByOrderStatusAndDriverId${serialize(payload)}`)
+  const getOrdersCompletedByDriverIdAndDate = (payload:OrdersFilterByDatePayLoad) =>
+    api.get(`/driver/getOrdersFilterDate${serialize(payload)}`)
   return {
     login,
     updateStatusOnlineAndLocation,
     updateOrderStatus,
-    getOrdersByOrderStatusAndDriverId
+    getOrdersByOrderStatusAndDriverId,
+    getOrdersCompletedByDriverIdAndDate,
   }
 }
 
